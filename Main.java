@@ -9,6 +9,8 @@ public class Main {
     static String fullTextContent = "";
     private static int BullishEngulfing = 0;
     private static int BearishEngulfing = 0;
+    static boolean textFormat = false;
+    static boolean consoleOutput = false;
 
     public static void main(String[] args) {
         writeFile("jodete");
@@ -27,6 +29,8 @@ public class Main {
     }
 
     private static void loopEngulfing(ArrayList<String> sortedCVS, ArrayList<Integer> engulfingType, boolean isBullish) {
+//        int count = 0;
+        fullTextContent += daysCvsFormat();
         for (int index : engulfingType) {
 //                System.out.println("index: " + index);
             ArrayList<String> listOfTenDays = grabNextTenValues(sortedCVS, index);
@@ -40,17 +44,44 @@ public class Main {
                 tableTitle = "\nBEAR: " + companyName;
                 System.out.print(tableTitle);
             }
-            printTable(listOfTenDays, percentageOfList);
+            if(textFormat)
+                fullTextContent += tableTitle;
+            ArrayList<ArrayList<String>> datesNClosings = getDateAndCLosing(listOfTenDays);
+            ArrayList<String> dates = datesNClosings.get(0);
+            ArrayList<String> closingPricing = datesNClosings.get(1);
+
+            fullTextContent += cvsFileGenerator(dates, percentageOfList);
+
+            if (consoleOutput)
+                printTable(dates, closingPricing, percentageOfList);
+
+//            if(count == 2)
+//                break;
+//            count++;
         }
+        writeFile(fullTextContent);
     }
 
-    private static void printTable(ArrayList<String> rowList, ArrayList<String> percentageOfList) {
-        ArrayList<ArrayList<String>> datesNClosings = getDateAndCLosing(rowList);
-        ArrayList<String> dates = datesNClosings.get(0);
-        ArrayList<String> closingProfits = datesNClosings.get(1);
+    private static String cvsFileGenerator(ArrayList<String> dates, ArrayList<String> percentageOfList) {
+        String date = dates.get(0);
+        percentageOfList.set(0, date);
 
+        String formatString = "";
+        for (int day = 0; day < 11; day++) {
+            if (day != 11 - 1) {
+                formatString += percentageOfList.get(day) + ",";
+            } else {
+                formatString += percentageOfList.get(day) + "\n";
+            }
+        }
+        return formatString;
+    }
+
+    private static void printTable(ArrayList<String> dates, ArrayList<String> closingPricing, ArrayList<String> percentageOfList) {
         String charLimits = "| %-15s";
         String titleDate = " date of engulfing ---> " + dates.get(0) + "\n";
+        if (textFormat)
+            fullTextContent += titleDate;
 
         System.out.println(titleDate);
         printDelimeters();
@@ -60,27 +91,61 @@ public class Main {
         System.out.format(charLimits, "Date");
         printRowCategory(dates);
         System.out.format(charLimits, "Price");
-        printRowCategory(closingProfits);
+        printRowCategory(closingPricing);
         System.out.format(charLimits, "Profit(%)");
         printRowCategory(percentageOfList);
         printDelimeters();
+
+        if (textFormat)
+            fullTextContent += listToCVSformat(percentageOfList);
+        writeFile(fullTextContent);
+
     }
 
-//    private static String formatString(String originalString) {
-//        String formattedString = originalString;
-//        int charLimit = 16;
-//        int spacesLeft = charLimit - originalString.length();
-//        for (int spaceCount = 0; spaceCount < spacesLeft; spaceCount++) {
-//            formattedString += " ";
-//        }
-//        return formattedString;
-//    }
+    private static String listToCVSformat(ArrayList<String> list) {
+        String formattedString = "";
+        for (int count = 0; count < list.size(); count++) {
+            if (count == list.size() - 1) {
+                formattedString += list.get(count) + "\n";
+            } else {
+                formattedString += list.get(count) + ",";
+            }
+        }
+        return formattedString;
+    }
+
+    private static String daysCvsFormat() {
+        String dayCvsFormat = "Date,";
+        for (int day = 1; day < 11; day++) {
+            String dayString = "Day " + day;
+            if (day != 11 - 1) {
+                dayCvsFormat += dayString + ",";
+            } else {
+                dayCvsFormat += dayString + "\n";
+            }
+        }
+
+        return dayCvsFormat;
+    }
 
     private static void printDays() {
         String charLimits = "| %-15s";
+
+        String dayCvsFormat = "";
         for (int day = 0; day < 11; day++) {
-            System.out.format(charLimits, "Day " + day);
+            String dayString = "Day " + day;
+            System.out.format(charLimits, dayString);
+            if (textFormat) {
+                if (day != 11 - 1) {
+                    dayCvsFormat += dayString + ",";
+                } else {
+                    dayCvsFormat += dayString + "\n";
+                }
+            }
+
         }
+        if (textFormat)
+            fullTextContent += dayCvsFormat;
         System.out.print("|\n");
     }
 
@@ -103,16 +168,16 @@ public class Main {
     private static ArrayList<ArrayList<String>> getDateAndCLosing(ArrayList<String> rowList) {
         ArrayList<ArrayList<String>> datesNclosing = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
-        ArrayList<String> closingProfits = new ArrayList<>();
+        ArrayList<String> closingPricing = new ArrayList<>();
 
         for (String row : rowList) {
             String[] rowData = splitRow(row);
             dates.add(rowData[Lables.DATE.val()]);
-            closingProfits.add(rowData[Lables.CLOSE.val()]);
+            closingPricing.add(rowData[Lables.CLOSE.val()]);
         }
 
         datesNclosing.add(dates);
-        datesNclosing.add(closingProfits);
+        datesNclosing.add(closingPricing);
 
         return datesNclosing;
     }
@@ -181,7 +246,7 @@ public class Main {
     }
 
     private static void writeFile(String content) {
-        File file = new File("filename.txt");
+        File file = new File("output.cvs");
 
         // if file doesnt exists, then create it
         try {
