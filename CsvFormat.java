@@ -1,0 +1,122 @@
+import java.util.ArrayList;
+
+/**
+ * Created by Josue on 4/23/2016.
+ */
+public class CsvFormat {
+    private ArrayList<String> dates = new ArrayList<>();
+    private ArrayList<String> closingPricing = new ArrayList<>();
+
+    CsvFormat(ArrayList<String> rowList) {
+        for (String row : rowList) {
+            String[] rowData = Engulfing.splitRow(row);
+            dates.add(rowData[Lables.DATE.val()]);
+            closingPricing.add(rowData[Lables.CLOSE.val()]);
+        }
+    }
+
+    public ArrayList<String> getDates() {
+        return this.dates;
+    }
+
+    public ArrayList<String> getClosingPricing() {
+        return this.closingPricing;
+    }
+
+    public String cvsOutputPercentage(ArrayList<String> percentageOfList) {
+        String date = this.dates.get(0);
+        percentageOfList.set(0, date);
+
+        String formatString = "";
+        for (int day = 0; day < 11; day++) {
+            if (day != 11 - 1) {
+                formatString += percentageOfList.get(day) + ",";
+            } else {
+                formatString += percentageOfList.get(day) + "\n";
+            }
+        }
+        return formatString;
+    }
+
+    public static String daysCvsFormat() {
+        String dayCvsFormat = "Date,";
+        for (int day = 1; day < 11; day++) {
+            String dayString = "Day " + day;
+            if (day != 11 - 1) {
+                dayCvsFormat += dayString + ",";
+            } else {
+                dayCvsFormat += dayString + "\n";
+            }
+        }
+
+        return dayCvsFormat;
+    }
+
+    public void printTable(ArrayList<String> dates, ArrayList<String> closingPricing, ArrayList<String> percentageOfList) {
+        String charLimits = "| %-15s";
+        String titleDate = " date of engulfing ---> " + dates.get(0) + "\n";
+        Main.textFileString.appendText(titleDate);
+
+        System.out.println(titleDate);
+        printDelimeters();
+        System.out.format(charLimits, "**************");
+        printDays();
+        printDelimeters();
+        System.out.format(charLimits, "Date");
+        printRowCategory(dates);
+        System.out.format(charLimits, "Price");
+        printRowCategory(closingPricing);
+        System.out.format(charLimits, "Profit(%)");
+        printRowCategory(percentageOfList);
+        printDelimeters();
+
+        Main.textFileString.appendText(listToCSVformat(percentageOfList));
+    }
+
+    private void printRowCategory(ArrayList<String> category) {
+        String charLimits = "| %-15s";
+        for (String aCategory : category) {
+            System.out.format(charLimits, aCategory);
+        }
+        System.out.print("|\n");
+    }
+
+    private void printDelimeters() {
+        for (int day = 0; day < 12; day++) {
+            System.out.print("+----------------");
+        }
+        System.out.print("+\n");
+    }
+
+    private void printDays() {
+        String charLimits = "| %-15s";
+
+        String dayCsvFormat = "";
+        for (int day = 0; day < 11; day++) {
+            String dayString = "Day " + day;
+            System.out.format(charLimits, dayString);
+            if (Main.textFileString.isAppendActive()) {
+                if (day != 11 - 1) {
+                    dayCsvFormat += dayString + ",";
+                } else {
+                    dayCsvFormat += dayString + "\n";
+                }
+            }
+
+        }
+        Main.textFileString.appendText(dayCsvFormat);
+        System.out.print("|\n");
+    }
+
+    private String listToCSVformat(ArrayList<String> list) {
+        String formattedString = "";
+        for (int count = 0; count < list.size(); count++) {
+            if (count == list.size() - 1) {
+                formattedString += list.get(count) + "\n";
+            } else {
+                formattedString += list.get(count) + ",";
+            }
+        }
+        return formattedString;
+    }
+}
