@@ -3,28 +3,34 @@
  */
 public class MyConsoleMenu extends ConsoleMenu {
     MyConsoleMenu() {
-        System.out.print("Welcome To Stack Tools\n\n");
+        System.out.print("Welcome To Stack Tools: Find Bullish and Bearish Engulfing\n\n");
 
-        System.out.print("Pick a Tools\n");
-        System.out.println("1.- Find Bullish and Bearish Engulfing");
-        this.option = inputInteger("Choose an option:", "You haven't chosen any option");
-        System.out.print("Pick an Output Option\n");
+        System.out.println("1.- Download Csv");
+        System.out.println("2.- Enter Path");
+        this.option = inputInteger("Pick an option: ", "You haven't chosen any option");
+        firstOption();
         System.out.println("1.- Print table in console of the next 10 days");
         System.out.println("2.- Write CVS File of the next 10 days profit %");
-        System.out.println("3.- Write a TEXT file of the next 10 days profit %");
-        System.out.println("4.- Print table in console and Write CVS file of the 10 days profit %");
-        this.outputOption = inputInteger("Pick the output Option you desire: ", "You haven't chosen any option");
+        System.out.println("3.- Print table in console and Write CVS file of the 10 days profit %");
+        this.outputOption = inputInteger("Pick an output Option: ", "You haven't chosen any option");
         secondOption();
-        this.fileName = inputString("\nWrite the path or the file name including the file type (example.extension)",
-                "You must input a file name").trim();
     }
 
     @Override
     public void firstOption() {
         switch (this.option) {
             case 1:
+                this.companyName = inputString("Enter acronyms of the company example: \n\t(BAC) for Bank of America Corporation",
+                        "Enter a valid acronyms").toUpperCase();
+                this.fileName = this.companyName + ".csv";
+                break;
+            case 2:
+                this.fileName = inputString("\nWrite the path or the file name including the file type (example.extension): ",
+                        "You must input a file name").trim();
                 break;
             default:
+                this.fileName = inputString("\nWrite the path or the file name including the file type (example.extension)",
+                        "You must input a file name").trim();
                 break;
         }
     }
@@ -33,20 +39,17 @@ public class MyConsoleMenu extends ConsoleMenu {
     public void secondOption() {
         switch (this.outputOption) {
             case 1:
-                Main.consoleOutput = true;
+                StaticValues.consoleOutput = true;
                 break;
             case 2:
-                Main.csvFileString.setappendTextFile(true);
+                StaticValues.csvFileString.setappendTextFile(true);
                 break;
             case 3:
-                Main.textFileString.setappendTextFile(true);
-                break;
-            case 4:
-                Main.consoleOutput = true;
-                Main.csvFileString.setappendTextFile(true);
+                StaticValues.consoleOutput = true;
+                StaticValues.csvFileString.setappendTextFile(true);
                 break;
             default:
-                Main.consoleOutput = true;
+                StaticValues.consoleOutput = true;
                 break;
         }
     }

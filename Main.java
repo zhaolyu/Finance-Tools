@@ -1,16 +1,17 @@
-import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
     // Change it as your path indicates
-    static String companyName = "BAC";
-    static boolean consoleOutput = false;
-    static TextString textFileString = new TextString();
-    static TextString csvFileString = new TextString();
 
     public static void main(String[] args) {
         MyConsoleMenu menu = new MyConsoleMenu();
+
+        DownloadCompanyCsv companyCsv = new DownloadCompanyCsv(menu.getCompanyName());
+        StaticValues.companyName = companyCsv.getCompanyName();
         String originalCSV = menu.getFileName();
+        if(StaticValues.companyName == null){
+            StaticValues.companyName = originalCSV.substring(0, originalCSV.indexOf("."));
+        }
 
         CsvReaderWriter csvFile = new CsvReaderWriter(originalCSV, true);
         ArrayList<String> lines = csvFile.readLinesFromFile();
@@ -29,27 +30,10 @@ public class Main {
             if (bullishList != null) {
                 engulfing.loopEngulfing(sortedCSV, bullishList, true);
             }
-        }
-    }
 
-    static void writeFile(String content) {
-        File file = new File("output.csv");
-
-        // if file doesnt exists, then create it
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (bearish != null) {
+                engulfing.loopEngulfing(sortedCSV, bearish, false);
             }
-
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(content);
-            bw.close();
-
-            System.out.println("Done");
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

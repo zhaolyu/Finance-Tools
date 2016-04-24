@@ -7,6 +7,7 @@ abstract class ConsoleMenu {
     String fileName;
     int option;
     int outputOption;
+    String companyName;
 
     ConsoleMenu() {
 
@@ -20,9 +21,13 @@ abstract class ConsoleMenu {
         return this.fileName;
     }
 
+    String getCompanyName() {
+        return this.companyName;
+    }
+
     String inputString(String mainMessage, String errorMessage) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println(mainMessage);
+        System.out.print(mainMessage);
         String text = scanner.nextLine();
         if (text == null || text.length() == 0) {
             System.out.println(errorMessage);
@@ -35,7 +40,7 @@ abstract class ConsoleMenu {
 
     int inputInteger(String mainMessage, String errorMessage) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println(mainMessage);
+        System.out.print(mainMessage);
         int option;
         String text = scanner.nextLine();
         if (text == null || text.length() == 0) {

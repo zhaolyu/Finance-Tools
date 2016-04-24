@@ -140,7 +140,7 @@ public abstract class Engulfing {
     public abstract void doIt(int index, ArrayList<String> sortedCVS, boolean isBullish);
 
     public void loopEngulfing(ArrayList<String> sortedCVS, ArrayList<Integer> engulfingTypeList, boolean isBullish) {
-        Main.csvFileString.appendText(CsvFormat.daysCvsFormat());
+        StaticValues.csvFileString.appendText(CsvFormat.daysCvsFormat());
 //        int o = 0;
         for (int index : engulfingTypeList) {
             this.doIt(index, sortedCVS, isBullish);
@@ -149,7 +149,15 @@ public abstract class Engulfing {
 //            }
 //            o++;
         }
-        Main.writeFile(Main.csvFileString.getFullTextContent());
 
+        if (StaticValues.csvFileString.isAppendActive()){
+            if (isBullish){
+                StaticValues.writeFile(StaticValues.csvFileString.getFullTextContent(),
+                        StaticValues.companyName + "_BULLISH");
+            }else{
+                StaticValues.writeFile(StaticValues.csvFileString.getFullTextContent(),
+                        StaticValues.companyName + "_BEARISH");
+            }
+        }
     }
 }

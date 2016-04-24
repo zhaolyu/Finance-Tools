@@ -55,7 +55,6 @@ public class CsvFormat {
     public void printTable(ArrayList<String> dates, ArrayList<String> closingPricing, ArrayList<String> percentageOfList) {
         String charLimits = "| %-15s";
         String titleDate = " date of engulfing ---> " + dates.get(0) + "\n";
-        Main.textFileString.appendText(titleDate);
 
         System.out.println(titleDate);
         printDelimeters();
@@ -69,8 +68,6 @@ public class CsvFormat {
         System.out.format(charLimits, "Profit(%)");
         printRowCategory(percentageOfList);
         printDelimeters();
-
-        Main.textFileString.appendText(listToCSVformat(percentageOfList));
     }
 
     private void printRowCategory(ArrayList<String> category) {
@@ -91,20 +88,10 @@ public class CsvFormat {
     private void printDays() {
         String charLimits = "| %-15s";
 
-        String dayCsvFormat = "";
         for (int day = 0; day < 11; day++) {
             String dayString = "Day " + day;
             System.out.format(charLimits, dayString);
-            if (Main.textFileString.isAppendActive()) {
-                if (day != 11 - 1) {
-                    dayCsvFormat += dayString + ",";
-                } else {
-                    dayCsvFormat += dayString + "\n";
-                }
-            }
-
         }
-        Main.textFileString.appendText(dayCsvFormat);
         System.out.print("|\n");
     }
 
