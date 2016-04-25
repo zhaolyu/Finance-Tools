@@ -9,6 +9,8 @@ public abstract class Engulfing {
     private ArrayList<Integer> bearishIndexList = new ArrayList<>();
     private long bullishCount = 0;
     private long bearishCount = 0;
+    public boolean allowAppendText = false;
+    private TextManipulation textManipulation = new TextManipulation();
 
     Engulfing(ArrayList<String> list) {
         if (list.get(0).split(",").length >= 5) {
@@ -38,6 +40,15 @@ public abstract class Engulfing {
         } else {
             throw new Error("List is null or has less than 5 elements");
         }
+    }
+
+    public void setAllowAppendText(boolean allowAppendText) {
+        this.allowAppendText = allowAppendText;
+        textManipulation.setappendTextFile(this.allowAppendText);
+    }
+
+    public boolean isAppendTextAllowed() {
+        return this.allowAppendText;
     }
 
     /**
@@ -106,7 +117,7 @@ public abstract class Engulfing {
         return newList;
     }
 
-    ArrayList<String> getProfitPercentage(ArrayList<String> listOfTenDates, boolean isBullish) {
+    public ArrayList<String> getProfitPercentage(ArrayList<String> listOfTenDates, boolean isBullish) {
         ArrayList<String> percentageList = new ArrayList<>();
         percentageList.add("N/A");
         percentageList.add("0.00");
@@ -120,7 +131,7 @@ public abstract class Engulfing {
         return percentageList;
     }
 
-    public String doProfitOperation(String firstDayAfterEngulfing, String currentDay, boolean isBullish) {
+    private String doProfitOperation(String firstDayAfterEngulfing, String currentDay, boolean isBullish) {
         double subtraction;
         if (isBullish) {
             subtraction = (Double.parseDouble(currentDay) - Double.parseDouble(firstDayAfterEngulfing));
@@ -140,7 +151,8 @@ public abstract class Engulfing {
     public abstract void doIt(int index, ArrayList<String> sortedCVS, boolean isBullish);
 
     public void loopEngulfing(ArrayList<String> sortedCVS, ArrayList<Integer> engulfingTypeList, boolean isBullish) {
-        StaticValues.csvFileString.appendText(CsvFormat.daysCvsFormat());
+        textManipulation = new TextManipulation(this.allowAppendText);
+        textManipulation.appendText(CsvFormat.daysCvsFormat("Date"));
 //        int o = 0;
         for (int index : engulfingTypeList) {
             this.doIt(index, sortedCVS, isBullish);
@@ -150,14 +162,17 @@ public abstract class Engulfing {
 //            o++;
         }
 
-        if (StaticValues.csvFileString.isAppendActive()){
-            if (isBullish){
-                StaticValues.writeFile(StaticValues.csvFileString.getFullTextContent(),
-                        StaticValues.companyName + "_BULLISH");
-            }else{
-                StaticValues.writeFile(StaticValues.csvFileString.getFullTextContent(),
-                        StaticValues.companyName + "_BEARISH");
-            }
-        }
+        this.doMore(isBullish);
     }
+
+    public TextManipulation getTextManipulation() {
+        return this.textManipulation;
+    }
+
+    abstract void doMore(boolean isBullish);
+
+    public void appendText(String contentToAppend) {
+        this.textManipulation.appendText(contentToAppend);
+    }
+
 }

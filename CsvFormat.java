@@ -7,7 +7,7 @@ public class CsvFormat {
     private ArrayList<String> dates = new ArrayList<>();
     private ArrayList<String> closingPricing = new ArrayList<>();
 
-    CsvFormat(ArrayList<String> rowList) {
+    public CsvFormat(ArrayList<String> rowList) {
         for (String row : rowList) {
             String[] rowData = Engulfing.splitRow(row);
             dates.add(rowData[Lables.DATE.val()]);
@@ -38,8 +38,8 @@ public class CsvFormat {
         return formatString;
     }
 
-    public static String daysCvsFormat() {
-        String dayCvsFormat = "Date,";
+    public static String daysCvsFormat(String prevString) {
+        String dayCvsFormat = prevString + ",";
         for (int day = 1; day < 11; day++) {
             String dayString = "Day " + day;
             if (day != 11 - 1) {

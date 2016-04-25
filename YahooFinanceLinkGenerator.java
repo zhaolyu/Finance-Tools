@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /**
- * Created by Silvia on 4/24/2016.
+ * Created by Josue on 4/24/2016.
  */
 public class YahooFinanceLinkGenerator {
     private String companyName;

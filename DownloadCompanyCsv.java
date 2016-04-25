@@ -11,7 +11,7 @@ public class DownloadCompanyCsv {
 
     DownloadCompanyCsv(String companyName) {
         if (companyName != null) {
-            this.companyName = companyName;
+            this.companyName = companyName.trim().toUpperCase();
 
             YahooFinanceLinkGenerator yahooUrl = new YahooFinanceLinkGenerator(this.companyName);
             this.contentByLine = scrapeContent(yahooUrl.getFinanceHistoryLink());
@@ -50,6 +50,7 @@ public class DownloadCompanyCsv {
 
         FileOutputStream fos = new FileOutputStream(fileName);
         fos.write(response);
+        fos.flush();
         fos.close();
         System.out.println("Finished downloading");
     }

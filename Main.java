@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Main {
+    static MyEngulfing engulfing;
     // Change it as your path indicates
-
     public static void main(String[] args) {
         MyConsoleMenu menu = new MyConsoleMenu();
 
@@ -20,7 +20,8 @@ public class Main {
             // Sort from oldest to newest
             ArrayList<String> sortedCSV = sortFromOldestToNewest(lines);
             // Detect engulfing
-            MyEngulfing engulfing = new MyEngulfing(sortedCSV);
+            engulfing = new MyEngulfing(sortedCSV);
+            engulfing.setAllowAppendText(StaticValues.allowAppendingText);
 
             ArrayList<Integer> bullishList = engulfing.getBullishIndexList();
             ArrayList<Integer> bearish = engulfing.getBearishIndexList();

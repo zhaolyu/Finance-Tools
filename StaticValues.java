@@ -9,27 +9,9 @@ import java.io.IOException;
 public class StaticValues {
     static String companyName;
     static boolean consoleOutput = false;
-    static TextString csvFileString = new TextString();
+    static  boolean allowAppendingText = true;
+    static boolean outputCsvFile = true;
+    static boolean outputStockAnalysis = true;
+    static TextManipulation stockOutput = new TextManipulation();
 
-    static void writeFile(String content, String outputFileName) {
-        String csvFileName = outputFileName + ".csv";
-        File file = new File(csvFileName);
-
-        // if file doesnt exists, then create it
-        try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(content);
-            bw.close();
-
-            System.out.println(csvFileName + " created.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
