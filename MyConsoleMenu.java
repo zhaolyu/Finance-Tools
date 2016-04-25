@@ -2,8 +2,6 @@
  * Created by Josue on 4/23/2016.
  */
 public class MyConsoleMenu extends ConsoleMenu {
-    private Engulfing cvsOutputEngulfing;
-
     MyConsoleMenu() {
         System.out.print("Welcome To Stack Tools: Find Bullish and Bearish Engulfing\n\n");
 
@@ -29,6 +27,9 @@ public class MyConsoleMenu extends ConsoleMenu {
             case 2:
                 this.fileName = inputString("\nWrite the path or the file name including the file type (example.extension): ",
                         "You must input a file name").trim();
+                if (!this.fileName.contains(".")){
+                    this.fileName += ".csv";
+                }
                 break;
             default:
                 this.fileName = inputString("\nWrite the path or the file name including the file type (example.extension)",

@@ -17,7 +17,11 @@ public class CsvReaderWriter {
      */
     CsvReaderWriter(String fileName, boolean parse) {
         if (fileName != null) {
-            this.fileName = fileName + ".csv";
+            if (fileName.contains(".csv")){
+                this.fileName = fileName;
+            }else {
+                this.fileName = fileName + ".csv";
+            }
         } else {
             throw new Error("File is null");
         }
