@@ -7,10 +7,10 @@ public class Main {
         MyConsoleMenu menu = new MyConsoleMenu();
 
         DownloadCompanyCsv companyCsv = new DownloadCompanyCsv(menu.getCompanyName());
-        StaticValues.companyName = companyCsv.getCompanyName();
+        Settings.companyName = companyCsv.getCompanyName();
         String originalCSV = menu.getFileName();
-        if(StaticValues.companyName == null){
-            StaticValues.companyName = originalCSV.substring(0, originalCSV.indexOf("."));
+        if(Settings.companyName == null){
+            Settings.companyName = originalCSV.substring(0, originalCSV.indexOf("."));
         }
 
         CsvReaderWriter csvFile = new CsvReaderWriter(originalCSV, true);
@@ -21,7 +21,7 @@ public class Main {
             ArrayList<String> sortedCSV = sortFromOldestToNewest(lines);
             // Detect engulfing
             engulfing = new MyEngulfing(sortedCSV);
-            engulfing.setAllowAppendText(StaticValues.allowAppendingText);
+            engulfing.setAllowAppendText(Settings.allowAppendingText);
 
             ArrayList<Integer> bullishList = engulfing.getBullishIndexList();
             ArrayList<Integer> bearish = engulfing.getBearishIndexList();

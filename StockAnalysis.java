@@ -25,7 +25,7 @@ public class StockAnalysis {
 
     public String getAveragePerDay() {
         // we subtract because the first value are the categories
-        String averagePerDay = StaticValues.companyName + "," +
+        String averagePerDay = Settings.companyName + "," +
                 String.valueOf(this.csvPercentageData.size() - 1) + ",";
         ArrayList<Double> doubleDayData = new ArrayList<>();
 

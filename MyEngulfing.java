@@ -14,13 +14,13 @@ public class MyEngulfing extends Engulfing {
         ArrayList<String> listOfTenDays = grabTenDaysAfter(sortedCVS, index);
         ArrayList<String> percentageOfList = getProfitPercentage(listOfTenDays, isBullish);
 
-        if (StaticValues.consoleOutput) {
+        if (Settings.consoleOutput) {
             String tableTitle;
             if (isBullish) {
-                tableTitle = "\nBULL: " + StaticValues.companyName;
+                tableTitle = "\nBULL: " + Settings.companyName;
                 System.out.print(tableTitle);
             } else {
-                tableTitle = "\nBEAR: " + StaticValues.companyName;
+                tableTitle = "\nBEAR: " + Settings.companyName;
                 System.out.print(tableTitle);
             }
 
@@ -33,14 +33,14 @@ public class MyEngulfing extends Engulfing {
 
         //Append content
         super.appendText(rowData.cvsOutputPercentage(percentageOfList));
-        if (StaticValues.consoleOutput)
+        if (Settings.consoleOutput)
             rowData.printTable(dates, closingPricing, percentageOfList);
     }
 
     @Override
     void doMore(boolean isBullish) {
         // Writes file if cvs is Active
-        this.getTextManipulation().setAllowCreateFile(StaticValues.outputCsvFile);
+        this.getTextManipulation().setAllowCreateFile(Settings.outputCsvFile);
         if (this.getTextManipulation().isAppendActive() && this.getTextManipulation().getAllowCreateFile()) {
             String fileName;
 
@@ -49,7 +49,7 @@ public class MyEngulfing extends Engulfing {
                 this.getTextManipulation().writeFile(fileName);
 
                 // Calculates the average of all the engulfing found
-                if (StaticValues.outputStockAnalysis){
+                if (Settings.outputStockAnalysis){
                     try {
                         TextManipulation stockAnalysis = new TextManipulation(true);
                         StockAnalysis analysis = new StockAnalysis(this.getTextManipulation().toArrayList());
@@ -75,9 +75,9 @@ public class MyEngulfing extends Engulfing {
     private String getEnglfName(boolean isBullish){
         String fileName;
         if (isBullish) {
-            fileName = StaticValues.companyName + "_BULLISH";
+            fileName = Settings.companyName + "_BULLISH";
         } else {
-            fileName = StaticValues.companyName + "_BEARISH";
+            fileName = Settings.companyName + "_BEARISH";
         }
         return fileName;
     }

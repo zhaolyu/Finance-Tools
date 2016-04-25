@@ -41,17 +41,17 @@ public class MyConsoleMenu extends ConsoleMenu {
     public void secondOption() {
         switch (this.outputOption) {
             case 1:
-                StaticValues.consoleOutput = true;
+                Settings.consoleOutput = true;
                 break;
             case 2:
-                StaticValues.outputCsvFile = true;
+                Settings.outputCsvFile = true;
                 break;
             case 3:
-                StaticValues.consoleOutput = true;
-                StaticValues.outputCsvFile = true;
+                Settings.consoleOutput = true;
+                Settings.outputCsvFile = true;
                 break;
             default:
-                StaticValues.consoleOutput = true;
+                Settings.consoleOutput = true;
                 break;
         }
     }
