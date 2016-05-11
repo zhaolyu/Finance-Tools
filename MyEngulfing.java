@@ -11,19 +11,23 @@ public class MyEngulfing extends Engulfing {
 
     @Override
     public void doIt(int index, ArrayList<String> sortedCVS, boolean isBullish) {
-        ArrayList<String> listOfTenDays = grabTenDaysAfter(sortedCVS, index);
-        ArrayList<String> percentageOfList = getProfitPercentage(listOfTenDays, isBullish);
-
+        
+    	//index-1 due to logic in Engulfing.java and how it decides occurrences of Engulfings
+    	ArrayList<String> listOfTenDays = grabTenDaysAfter(sortedCVS, index);
+        	
+    	ArrayList<String> percentageOfList = getProfitPercentage(listOfTenDays, isBullish);
+    
         if (Settings.consoleOutput) {
             String tableTitle;
             if (isBullish) {
-                tableTitle = "\nBULL: " + Settings.companyName;
-                System.out.print(tableTitle);
+                tableTitle = "\nBULLISH: " + Settings.companyName;
+               //Commented out so tables are not displayed in console
+                //System.out.print(tableTitle); 
             } else {
-                tableTitle = "\nBEAR: " + Settings.companyName;
-                System.out.print(tableTitle);
+                tableTitle = "\nBEARISH: " + Settings.companyName;
+              //Commented out so tables are not displayed in console
+                //System.out.print(tableTitle);
             }
-
         }
 
         CsvFormat rowData = new CsvFormat(listOfTenDays);
@@ -33,8 +37,9 @@ public class MyEngulfing extends Engulfing {
 
         //Append content
         super.appendText(rowData.cvsOutputPercentage(percentageOfList));
-        if (Settings.consoleOutput)
-            rowData.printTable(dates, closingPricing, percentageOfList);
+        //Commented out so console does not show every table
+        //if (Settings.consoleOutput)
+            //rowData.printTable(dates, closingPricing, percentageOfList);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class MyEngulfing extends Engulfing {
                         TextManipulation stockAnalysis = new TextManipulation(true);
                         StockAnalysis analysis = new StockAnalysis(this.getTextManipulation().toArrayList());
                         // Add text to write
-                        stockAnalysis.appendText(CsvFormat.daysCvsFormat("Company,Vol"));
+                        stockAnalysis.appendText(CsvFormat.daysCvsFormat("Company | Vol"));
                         stockAnalysis.appendText(analysis.getAveragePerDay());
 
                         fileName = getEnglfName(isBullish);

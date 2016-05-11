@@ -4,7 +4,7 @@ public class Main {
     static MyEngulfing engulfing;
     // Change it as your path indicates
     public static void main(String[] args) {
-        MyConsoleMenu menu = new MyConsoleMenu();
+        MyConsoleMenu menu = new MyConsoleMenu(); 
 
         DownloadCompanyCsv companyCsv = new DownloadCompanyCsv(menu.getCompanyName());
         Settings.companyName = companyCsv.getCompanyName();
@@ -24,16 +24,18 @@ public class Main {
             engulfing.setAllowAppendText(Settings.allowAppendingText);
 
             ArrayList<Integer> bullishList = engulfing.getBullishIndexList();
-            ArrayList<Integer> bearish = engulfing.getBearishIndexList();
-
-            System.out.println("Bull engulfing found: " + engulfing.getBullishCount());
-            System.out.println("Bear engulfing found: " + engulfing.getBearishCount());
+            ArrayList<Integer> bearishList = engulfing.getBearishIndexList();
+            
+            System.out.println("Bullish engulfings found: " + engulfing.getBullishCount());
+            System.out.println("Bearish engulfings found: " + engulfing.getBearishCount());
+            
+            //Output engulfings
             if (bullishList != null) {
                 engulfing.loopEngulfing(sortedCSV, bullishList, true);
             }
-
-            if (bearish != null) {
-                engulfing.loopEngulfing(sortedCSV, bearish, false);
+            
+            if (bearishList != null) {
+                engulfing.loopEngulfing(sortedCSV, bearishList, false);
             }
         }
     }

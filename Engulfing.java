@@ -11,30 +11,33 @@ public abstract class Engulfing {
     private long bearishCount = 0;
     public boolean allowAppendText = false;
     private TextManipulation textManipulation = new TextManipulation();
-
+    
     Engulfing(ArrayList<String> list) {
         if (list.get(0).split(",").length >= 5) {
-            // We skip first index because that's the category tables
+        	// We skip first index because that's the category tables
             for (int index = 2; index < list.size(); index++) {
-                String[] previewsDay = list.get(index - 1).split(",");
+                String[] previousDay = list.get(index - 1).split(",");
                 String[] currentDay = list.get(index).split(",");
 
-                double O1 = Double.parseDouble(previewsDay[Lables.OPEN.val()]);
-                double C1 = Double.parseDouble(previewsDay[Lables.CLOSE.val()]);
+                double O1 = Double.parseDouble(previousDay[Lables.OPEN.val()]);
+                double C1 = Double.parseDouble(previousDay[Lables.CLOSE.val()]);
                 double O2 = Double.parseDouble(currentDay[Lables.OPEN.val()]);
                 double C2 = Double.parseDouble(currentDay[Lables.CLOSE.val()]);
-                double H1 = Double.parseDouble(previewsDay[Lables.HIGH.val()]);
-                double L1 = Double.parseDouble(previewsDay[Lables.LOW.val()]);
+                double H1 = Double.parseDouble(previousDay[Lables.HIGH.val()]);
+                double L1 = Double.parseDouble(previousDay[Lables.LOW.val()]);
                 double H2 = Double.parseDouble(currentDay[Lables.HIGH.val()]);
                 double L2 = Double.parseDouble(currentDay[Lables.LOW.val()]);
-
+                
+                //Checks values to see if conditions are met for Bullish/Bearish
+                //Logic now selects the previous day since Day 1 is when engulfing occurs 
                 if (isBullish(O1, C1, O2, C2, H1, L1, H2, L2)) {
                     this.bullishCount++;
-                    this.bullishIndexList.add(index);
+                    this.bullishIndexList.add(index-1);
                 }
+                
                 if (isBearish(O1, C1, O2, C2, H1, L1, H2, L2)) {
                     this.bearishCount++;
-                    this.bearishIndexList.add(index);
+                    this.bearishIndexList.add(index-1);
                 }
             }
         } else {
@@ -110,10 +113,21 @@ public abstract class Engulfing {
     ArrayList<String> grabTenDaysAfter(ArrayList<String> list, int startIndex) {
         ArrayList<String> newList = new ArrayList<>();
         // index 0 will be our engulfing the next 10 will be our data needed
-        for (int loops = 0; loops < 11; loops++) {
-            newList.add(list.get(startIndex));
-            startIndex++;
-        }
+        //Index represents when the engulfing occured\
+    	if((list.size() - startIndex) < 10 ) {
+    		int size = list.size() - startIndex;
+    		for(int loops = 0; loops < size; loops++) {
+    			newList.add(list.get(startIndex));
+    			startIndex++;
+    		}
+    	}
+    	
+    	else {
+    		for (int loops = 0; loops < 11; loops++) {
+	            newList.add(list.get(startIndex));
+	            startIndex++;
+    		}
+    	}
         return newList;
     }
 
@@ -121,25 +135,22 @@ public abstract class Engulfing {
         ArrayList<String> percentageList = new ArrayList<>();
         percentageList.add("N/A");
         percentageList.add("0.00");
-        // we skip index 0 because that's our engulfing
-        String[] day1 = splitRow(listOfTenDates.get(1));
+        
+        //Percentage calculations start with Day 1(Engulfing occurence)
         for (int i = 2; i < listOfTenDates.size(); i++) {
+        	String[] previousDay = splitRow(listOfTenDates.get(i-1));
             String[] currentDay = splitRow(listOfTenDates.get(i));
-            percentageList.add(doProfitOperation(day1[Lables.CLOSE.val()], currentDay[Lables.CLOSE.val()], isBullish));
-//            System.out.println(doProfitOperation(day1[Lables.CLOSE.val()], currentDay[Lables.CLOSE.val()], isBullish));
+            percentageList.add(doProfitOperation(previousDay[Lables.CLOSE.val()], currentDay[Lables.CLOSE.val()], isBullish));
+            //System.out.println(doProfitOperation(day1[Lables.CLOSE.val()], currentDay[Lables.CLOSE.val()], isBullish));
         }
         return percentageList;
     }
 
-    private String doProfitOperation(String firstDayAfterEngulfing, String currentDay, boolean isBullish) {
-        double subtraction;
-        if (isBullish) {
-            subtraction = (Double.parseDouble(currentDay) - Double.parseDouble(firstDayAfterEngulfing));
-        } else {
-            subtraction = (Double.parseDouble(firstDayAfterEngulfing) - Double.parseDouble(currentDay));
-        }
-
-        double percentage = (subtraction / Double.parseDouble(firstDayAfterEngulfing)) * 100;
+    private String doProfitOperation(String PreviousDay, String currentDay, boolean isBullish) {
+        double subtraction = (Double.parseDouble(currentDay) - Double.parseDouble(PreviousDay));
+        double percentage = (subtraction / Double.parseDouble(currentDay)) * 100;
+        
+ 
         DecimalFormat dec = new DecimalFormat("0.00");
         return String.valueOf(dec.format(percentage));
     }
@@ -154,6 +165,7 @@ public abstract class Engulfing {
         textManipulation = new TextManipulation(this.allowAppendText);
         textManipulation.appendText(CsvFormat.daysCvsFormat("Date"));
 //        int o = 0;
+        
         for (int index : engulfingTypeList) {
             this.doIt(index, sortedCVS, isBullish);
 //            if(o == 3){

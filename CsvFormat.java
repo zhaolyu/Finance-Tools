@@ -26,11 +26,12 @@ public class CsvFormat {
     public String cvsOutputPercentage(ArrayList<String> percentageOfList) {
         String date = this.dates.get(0);
         percentageOfList.set(0, date);
+        int size = percentageOfList.size() - 1;
 
         String formatString = "";
-        for (int day = 0; day < 11; day++) {
-            if (day != 11 - 1) {
-                formatString += percentageOfList.get(day) + ",";
+        for (int day = 0; day <= size; day++) {
+            if (day != size) {
+            	formatString += percentageOfList.get(day) + ",";
             } else {
                 formatString += percentageOfList.get(day) + "\n";
             }
@@ -39,23 +40,23 @@ public class CsvFormat {
     }
 
     public static String daysCvsFormat(String prevString) {
-        String dayCvsFormat = prevString + ",";
+        String dayCvsFormat = prevString + " | ";
         for (int day = 1; day < 11; day++) {
             String dayString = "Day " + day;
             if (day != 11 - 1) {
-                dayCvsFormat += dayString + ",";
+                dayCvsFormat += dayString + "| ";
             } else {
                 dayCvsFormat += dayString + "\n";
             }
         }
-
         return dayCvsFormat;
     }
 
     public void printTable(ArrayList<String> dates, ArrayList<String> closingPricing, ArrayList<String> percentageOfList) {
         String charLimits = "| %-15s";
-        String titleDate = " date of engulfing ---> " + dates.get(0) + "\n";
-
+        
+        System.out.println();
+        String titleDate = " date of engulfing ---> " + dates.get(1);
         System.out.println(titleDate);
         printDelimeters();
         System.out.format(charLimits, "**************");

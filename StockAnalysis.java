@@ -22,24 +22,28 @@ public class StockAnalysis {
     private boolean isPercentageFormat() {
         return this.csvPercentageData.get(1).split(",").length == 11;
     }
-
+    
     public String getAveragePerDay() {
         // we subtract because the first value are the categories
-        String averagePerDay = Settings.companyName + "," +
-                String.valueOf(this.csvPercentageData.size() - 1) + ",";
+        String averagePerDay ="--------------------------------------------------------------------------------------\n" + 
+        		Settings.companyName + "     | " + String.valueOf(this.csvPercentageData.size() - 1) + " | ";
         ArrayList<Double> doubleDayData = new ArrayList<>();
-
+        
         for (int day = 0; day < 10; day++) {
             doubleDayData.add(0.0);
         }
-
+        
+        System.out.println(this.csvPercentageData.size());
         // We skip first value due to we do not need it.
         for (int rowIndex = 1; rowIndex < this.csvPercentageData.size(); rowIndex++) {
             // Split arrow into columns to get value of each day
             String[] stringDayData = this.csvPercentageData.get(rowIndex).split(",");
             // Sum each day by the previous value
-            for (int dayIndex = 0; dayIndex < doubleDayData.size(); dayIndex++) {
-                doubleDayData.set(dayIndex, (doubleDayData.get(dayIndex) + Double.parseDouble(stringDayData[dayIndex + 1])));
+           
+            int size = stringDayData.length;
+            for (int dayIndex = 1; dayIndex < size; dayIndex++) {
+            		
+            	doubleDayData.set(dayIndex-1, (doubleDayData.get(dayIndex-1) + Double.parseDouble(stringDayData[dayIndex])));
             }
         }
         // divide all sums with the volume or total size of dates
@@ -50,7 +54,7 @@ public class StockAnalysis {
 
             // Converting into csvString
             if (sumDayIndex != doubleDayData.size() - 1){
-                averagePerDay += doubleDayData.get(sumDayIndex) + ",";
+                averagePerDay += doubleDayData.get(sumDayIndex) + " | ";
             }else {
                 averagePerDay += doubleDayData.get(sumDayIndex);
             }
