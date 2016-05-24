@@ -41,9 +41,9 @@ public class CsvFormat {
 
     public static String daysCvsFormat(String prevString) {
         String dayCvsFormat = prevString + " | ";
-        for (int day = 1; day < 11; day++) {
+        for (int day = 1; day < 12; day++) {
             String dayString = "Day " + day;
-            if (day != 11 - 1) {
+            if (day != 12 - 1) {
                 dayCvsFormat += dayString + "| ";
             } else {
                 dayCvsFormat += dayString + "\n";
@@ -89,7 +89,7 @@ public class CsvFormat {
     private void printDays() {
         String charLimits = "| %-15s";
 
-        for (int day = 0; day < 11; day++) {
+        for (int day = 0; day < 12; day++) {
             String dayString = "Day " + day;
             System.out.format(charLimits, dayString);
         }

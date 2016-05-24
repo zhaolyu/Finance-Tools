@@ -18,7 +18,8 @@ public abstract class Engulfing {
             for (int index = 2; index < list.size(); index++) {
                 String[] previousDay = list.get(index - 1).split(",");
                 String[] currentDay = list.get(index).split(",");
-
+                
+       
                 double O1 = Double.parseDouble(previousDay[Lables.OPEN.val()]);
                 double C1 = Double.parseDouble(previousDay[Lables.CLOSE.val()]);
                 double O2 = Double.parseDouble(currentDay[Lables.OPEN.val()]);
@@ -32,12 +33,12 @@ public abstract class Engulfing {
                 //Logic now selects the previous day since Day 1 is when engulfing occurs 
                 if (isBullish(O1, C1, O2, C2, H1, L1, H2, L2)) {
                     this.bullishCount++;
-                    this.bullishIndexList.add(index-1);
+                    this.bullishIndexList.add(index);
                 }
                 
                 if (isBearish(O1, C1, O2, C2, H1, L1, H2, L2)) {
                     this.bearishCount++;
-                    this.bearishIndexList.add(index-1);
+                    this.bearishIndexList.add(index);
                 }
             }
         } else {
@@ -62,7 +63,9 @@ public abstract class Engulfing {
      * @return Bullish Engulfing
      */
     private boolean isBullish(double O1, double C1, double O2, double C2, double H1, double L1, double H2, double L2) {
-        return ((O1 >= C1) && (O2 <= C2) && (O2 <= C1) && (C2 >= O1) && (L1 >= L2) && (H2 >= H1));
+    	double HC = Math.abs(O1-C1) / Math.abs(H1 - L1);
+    	return ((O1 >= C1) && (O2 <= C2) && (O2 <= C1) && (C2 >= O1) && (L1 >= L2) && (H2 >= H1) && (HC >= 0.5) && ((H2-L2) > .02*O2));
+    	//return ((O1 >= C1) && (O2 <= C2) && (O2 <= C1) && (C2 >= O1) && (L1 >= L2) && (H2 >= H1));
     }
 
     /**
@@ -73,7 +76,9 @@ public abstract class Engulfing {
      * @return Bearish Engulfing
      */
     private static boolean isBearish(double O1, double C1, double O2, double C2, double H1, double L1, double H2, double L2) {
-        return ((C1 <= O2) && (O1 >= C2) && (O1 <= C1) && (O2 >= C2) && (L1 >= L2) && (H2 >= H1));
+    	double HC = Math.abs(O1-C1) / Math.abs(H1 - L1);
+    	return ((C1 <= O2) && (O1 >= C2) && (O1 <= C1) && (O2 >= C2) && (L1 >= L2) && (H2 >= H1) && (HC >= 0.5) && ((H2-L2) > .02*O2));
+        //return ((C1 <= O2) && (O1 >= C2) && (O1 <= C1) && (O2 >= C2) && (L1 >= L2) && (H2 >= H1));
     }
 
     /**
@@ -114,7 +119,7 @@ public abstract class Engulfing {
         ArrayList<String> newList = new ArrayList<>();
         // index 0 will be our engulfing the next 10 will be our data needed
         //Index represents when the engulfing occured\
-    	if((list.size() - startIndex) < 10 ) {
+    	if((list.size() - startIndex) < 11 ) {
     		int size = list.size() - startIndex;
     		for(int loops = 0; loops < size; loops++) {
     			newList.add(list.get(startIndex));
@@ -123,7 +128,7 @@ public abstract class Engulfing {
     	}
     	
     	else {
-    		for (int loops = 0; loops < 11; loops++) {
+    		for (int loops = 0; loops < 12; loops++) {
 	            newList.add(list.get(startIndex));
 	            startIndex++;
     		}

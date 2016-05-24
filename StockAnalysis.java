@@ -20,16 +20,16 @@ public class StockAnalysis {
     }
 
     private boolean isPercentageFormat() {
-        return this.csvPercentageData.get(1).split(",").length == 11;
+        return this.csvPercentageData.get(1).split(",").length == 12;
     }
     
     public String getAveragePerDay() {
         // we subtract because the first value are the categories
-        String averagePerDay ="--------------------------------------------------------------------------------------\n" + 
+        String averagePerDay ="---------------------------------------------------------------------------------------------\n" + 
         		Settings.companyName + "     | " + String.valueOf(this.csvPercentageData.size() - 1) + " | ";
         ArrayList<Double> doubleDayData = new ArrayList<>();
         
-        for (int day = 0; day < 10; day++) {
+        for (int day = 0; day < 11; day++) {
             doubleDayData.add(0.0);
         }
         
